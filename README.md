@@ -73,7 +73,7 @@ function Ranger()
     x        = 0.5
 end
 
-command! Ranger :lua Ranger()<CR>
+vim.cmd [[ command! Ranger :lua Ranger()<CR> ]]
 ```
 
 Open [lazygit](https://github.com/jesseduffield/lazygit) with the cwd
@@ -94,7 +94,7 @@ function Lazygit()
   }
 end
 
-command! Lazygit :lua Lazygit()<CR>
+vim.cmd [[ command! Lazygit :lua Lazygit()<CR> ]]
 ```
 
 ### To Do:
