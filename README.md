@@ -11,6 +11,9 @@
 `tui-nvim` is [fm-nvim's](https://github.com/is0n/fm-nvim) successor that allows for much more customization.
 tui-nvim's goal is to allow you to use your favorite terminal programs. Some examples are [zsh](https://www.zsh.org/), [lf](https://github.com/gokcehan/lf/), and [glow](https://github.com/charmbracelet/glow)
 
+## Demo:
+https://user-images.githubusercontent.com/57725322/167266328-fc6f8e57-c90f-4342-a2e8-813163cc9ec8.mp4
+
 ## Installation:
 
 - [packer.nvim](https://github.com/wbthomason/packer.nvim):
@@ -21,8 +24,6 @@ tui-nvim's goal is to allow you to use your favorite terminal programs. Some exa
 ## Configuration:
 ```lua
  require("tui-nvim").setup ({
-  -- File Manager Related --
-
   -- File that is read from
   -- useful for file managers
   temp     = "/tmp/tui-nvim",
@@ -30,7 +31,15 @@ tui-nvim's goal is to allow you to use your favorite terminal programs. Some exa
   -- Command used to open files
   method   = "edit",
 
-  -- General --
+  -- Example of a mapping
+  mappings = {
+    { "<ESC>", "<C-\\><C-n>:q<CR>" }
+  },
+
+  -- Execute functions
+  -- upon open/exit
+  on_open  = {},
+  on_exit  = {},
 
   -- Window border (see ':h nvim_open_win')
   border   = "rounded",
@@ -42,7 +51,7 @@ tui-nvim's goal is to allow you to use your favorite terminal programs. Some exa
   -- Window transparency (see ':h winblend')
   winblend = 0,
 
-  -- Num from `0 - 1` for measurements
+  -- Num from '0 - 1' for measurements
   height   = 0.8,
   width    = 0.8,
   y        = 0.5,
@@ -60,17 +69,14 @@ If an option such as `height` is not provided, it will fallback to the defaults 
 ```lua
 function Ranger()
   require("tui-nvim"):new {
+    -- Write selected files to '/tmp/tui-nvim'
     cmd      = "ranger --choosefiles=/tmp/tui-nvim --selectfile=" .. vim.fn.fnameescape(vim.fn.expand("%:p"))
+    
+    -- Read and open files from '/tmp/tui-nvim'
     temp     = "/tmp/tui-nvim",
-    method   = "edit",
-    border   = "rounded",
-    borderhl = "Normal",
-    winhl    = "Normal",
-    winblend = 0,
-    height   = 0.8,
-    width    = 0.8,
-    y        = 0.5,
-    x        = 0.5
+
+    -- Open files in splits
+    method   = "split"
 end
 
 vim.cmd [[ command! Ranger :lua Ranger()<CR> ]]
@@ -81,16 +87,6 @@ vim.cmd [[ command! Ranger :lua Ranger()<CR> ]]
 function Lazygit()
   require("tui-nvim"):new {
     cmd      = "lazygit -w " .. vim.fn.fnameescape(vim.fn.expand("%:p:h"))
-    temp     = "/tmp/tui-nvim",
-    method   = "edit",
-    border   = "rounded",
-    borderhl = "Normal",
-    winhl    = "Normal",
-    winblend = 0,
-    height   = 0.8,
-    width    = 0.8,
-    y        = 0.5,
-    x        = 0.5
   }
 end
 
@@ -100,6 +96,6 @@ vim.cmd [[ command! Lazygit :lua Lazygit()<CR> ]]
 ## To Do:
 - [x] User defined keybinds
 - [x] Resize window upon `VimResized`
-- [ ] On open/exit funcionality
+- [x] On open/exit funcionality
+- [x] Add Demo
 - [ ] Toggle window
-- [ ] Add Demo
