@@ -3,6 +3,7 @@ local M = {}
 local defaults = {
   temp     = "/tmp/tui-nvim",
   method   = "edit",
+  mappings = {},
   border   = "rounded",
   borderhl = "Normal",
   winhl    = "Normal",
@@ -37,6 +38,7 @@ end
 
 function M:new(opts)
   opts = vim.tbl_deep_extend("force", defaults, opts)
+  local dim = dimensions(opts)
 
   local function on_exit()
     vim.api.nvim_win_close(M.win, true)
@@ -53,7 +55,6 @@ function M:new(opts)
     os.remove(opts.temp)
   end
 
-  local dim = dimensions(opts)
   M.buf = vim.api.nvim_create_buf(false, true)
   M.win = vim.api.nvim_open_win(M.buf, true, {
     style    = "minimal",
@@ -70,6 +71,10 @@ function M:new(opts)
   vim.api.nvim_win_set_option(M.win, "winblend", opts.winblend)
 
 	vim.api.nvim_buf_set_option(M.buf, "filetype", "TUI")
+
+  for _,keymap in ipairs(opts.mappings) do
+    vim.api.nvim_buf_set_keymap(M.buf, "t", keymap[1], keymap[2], {silent = true})
+  end
 
   vim.fn.termopen(opts.cmd, {on_exit = on_exit})
   vim.cmd("startinsert")
