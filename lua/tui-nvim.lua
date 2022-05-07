@@ -4,6 +4,8 @@ local defaults = {
   temp     = "/tmp/tui-nvim",
   method   = "edit",
   mappings = {},
+  on_open  = {},
+  on_exit  = {},
   border   = "rounded",
   borderhl = "Normal",
   winhl    = "Normal",
@@ -61,6 +63,10 @@ function M:new(opts)
     vim.api.nvim_win_close(M.win, true)
     vim.api.nvim_buf_delete(M.buf, {force = true})
 
+    for _, func in ipairs(opts.on_exit) do
+      func()
+    end
+
     if not io.open(opts.temp, "r") then
       return
     end
@@ -91,6 +97,10 @@ function M:new(opts)
 
   for _,keymap in ipairs(opts.mappings) do
     vim.api.nvim_buf_set_keymap(M.buf, "t", keymap[1], keymap[2], {silent = true})
+  end
+
+  for _, func in ipairs(opts.on_open) do
+    func()
   end
 
   vim.fn.termopen(opts.cmd, {on_exit = on_exit})
