@@ -92,10 +92,3 @@ end
 
 vim.cmd [[ command! Lazygit :lua Lazygit()<CR> ]]
 ```
-
-## To Do:
-- [x] User defined keybinds
-- [x] Resize window upon `VimResized`
-- [x] On open/exit funcionality
-- [x] Add Demo
-- [ ] Toggle window
