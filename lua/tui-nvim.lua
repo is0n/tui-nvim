@@ -36,9 +36,26 @@ function M.setup(user_opts)
   defaults = vim.tbl_deep_extend("force", defaults, user_opts)
 end
 
+local function resize(opts)
+  local dim = dimensions(opts)
+  vim.api.nvim_win_set_config(M.win, {
+    style    = "minimal",
+    relative = "editor",
+    border   = opts.border,
+    height   = dim.height,
+    width    = dim.width,
+    col      = dim.col,
+    row      = dim.row
+  })
+end
+
 function M:new(opts)
   opts = vim.tbl_deep_extend("force", defaults, opts)
   local dim = dimensions(opts)
+
+  function M.VimResized()
+    resize(opts)
+  end
 
   local function on_exit()
     vim.api.nvim_win_close(M.win, true)
@@ -78,6 +95,8 @@ function M:new(opts)
 
   vim.fn.termopen(opts.cmd, {on_exit = on_exit})
   vim.cmd("startinsert")
+
+  vim.cmd("autocmd! VimResized * lua require('tui-nvim').VimResized()")
 end
 
 return M
