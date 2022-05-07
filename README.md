@@ -56,7 +56,7 @@ Intead, the user supports their own terminal programs.
 
 If an option such as `height` is not provided, it will fallback to the defaults or the configuration found in `require("tui-nvim").setup()`
 
-Open [ranger](https://github.com/ranger/ranger) with the current file selected:
+### Open [ranger](https://github.com/ranger/ranger) with the current file selected:
 ```lua
 function Ranger()
   require("tui-nvim"):new {
@@ -76,7 +76,7 @@ end
 vim.cmd [[ command! Ranger :lua Ranger()<CR> ]]
 ```
 
-Open [lazygit](https://github.com/jesseduffield/lazygit) with the cwd
+### Open [lazygit](https://github.com/jesseduffield/lazygit) with the cwd:
 ```lua
 function Lazygit()
   require("tui-nvim"):new {
@@ -97,9 +97,9 @@ end
 vim.cmd [[ command! Lazygit :lua Lazygit()<CR> ]]
 ```
 
-### To Do:
-- [ ] Resize window upon `VimResized`
-- [ ] User defined keybinds
-- [ ] Add split terminal support
+## To Do:
+- [x] User defined keybinds
+- [x] Resize window upon `VimResized`
+- [ ] On open/exit funcionality
 - [ ] Toggle window
 - [ ] Add Demo
