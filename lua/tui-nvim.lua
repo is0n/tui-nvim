@@ -89,8 +89,7 @@ function M:new(opts)
     row      = dim.row
   })
 
-  vim.api.nvim_win_set_option(M.win, "winhl", ("Normal:%s"):format(opts.winhl))
-  vim.api.nvim_win_set_option(M.win, "winhl", ("FloatBorder:%s"):format(opts.borderhl))
+  vim.api.nvim_win_set_option(M.win, "winhl", ("Normal:%s,FloatBorder:%s"):format(opts.winhl, opts.borderhl))
   vim.api.nvim_win_set_option(M.win, "winblend", opts.winblend)
 
 	vim.api.nvim_buf_set_option(M.buf, "filetype", "TUI")
