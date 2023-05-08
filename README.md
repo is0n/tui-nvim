@@ -70,13 +70,14 @@ If an option such as `height` is not provided, it will fallback to the defaults 
 function Ranger()
   require("tui-nvim"):new {
     -- Write selected files to '/tmp/tui-nvim'
-    cmd      = "ranger --choosefiles=/tmp/tui-nvim --selectfile=" .. vim.fn.fnameescape(vim.fn.expand("%:p"))
-    
+    cmd = "ranger --choosefiles=/tmp/tui-nvim --selectfile=" .. vim.fn.fnameescape(vim.fn.expand("%:p")),
+
     -- Read and open files from '/tmp/tui-nvim'
-    temp     = "/tmp/tui-nvim",
+    temp = "/tmp/tui-nvim",
 
     -- Open files in splits
-    method   = "split"
+    method = "split",
+  }
 end
 
 vim.cmd [[ command! Ranger :lua Ranger()<CR> ]]
