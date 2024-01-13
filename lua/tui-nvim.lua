@@ -1,19 +1,19 @@
 local M = {}
 
 local defaults = {
-  temp     = "/tmp/tui-nvim",
-  method   = "edit",
+  temp = "/tmp/tui-nvim",
+  method = "edit",
   mappings = {},
-  on_open  = {},
-  on_exit  = {},
-  border   = "rounded",
+  on_open = {},
+  on_exit = {},
+  border = "rounded",
   borderhl = "Normal",
-  winhl    = "Normal",
+  winhl = "Normal",
   winblend = 0,
-  height   = 0.8,
-  width    = 0.8,
-  y        = 0.5,
-  x        = 0.5,
+  height = 0.8,
+  width = 0.8,
+  y = 0.5,
+  x = 0.5,
 }
 
 local function dimensions(opts)
@@ -27,10 +27,10 @@ local function dimensions(opts)
   local row = math.ceil((ln - height) * opts.y - 1)
 
   return {
-      width = width,
-      height = height,
-      col = col,
-      row = row
+    width = width,
+    height = height,
+    col = col,
+    row = row,
   }
 end
 
@@ -41,13 +41,13 @@ end
 local function resize(opts)
   local dim = dimensions(opts)
   vim.api.nvim_win_set_config(M.win, {
-    style    = "minimal",
+    style = "minimal",
     relative = "editor",
-    border   = opts.border,
-    height   = dim.height,
-    width    = dim.width,
-    col      = dim.col,
-    row      = dim.row
+    border = opts.border,
+    height = dim.height,
+    width = dim.width,
+    col = dim.col,
+    row = dim.row,
   })
 end
 
@@ -61,7 +61,10 @@ function M:new(opts)
 
   local function on_exit()
     vim.api.nvim_win_close(M.win, true)
-    vim.api.nvim_buf_delete(M.buf, {force = true})
+    vim.api.nvim_buf_delete(M.buf, { force = true })
+    vim.cmd([[augroup TuiNvim
+      autocmd! VimResized
+    augroup END]])
 
     for _, func in ipairs(opts.on_exit) do
       func()
@@ -80,33 +83,35 @@ function M:new(opts)
 
   M.buf = vim.api.nvim_create_buf(false, true)
   M.win = vim.api.nvim_open_win(M.buf, true, {
-    style    = "minimal",
+    style = "minimal",
     relative = "editor",
-    border   = opts.border,
-    height   = dim.height,
-    width    = dim.width,
-    col      = dim.col,
-    row      = dim.row
+    border = opts.border,
+    height = dim.height,
+    width = dim.width,
+    col = dim.col,
+    row = dim.row,
   })
 
   vim.api.nvim_win_set_option(M.win, "winhl", ("Normal:%s"):format(opts.winhl))
   vim.api.nvim_win_set_option(M.win, "winhl", ("FloatBorder:%s"):format(opts.borderhl))
   vim.api.nvim_win_set_option(M.win, "winblend", opts.winblend)
 
-	vim.api.nvim_buf_set_option(M.buf, "filetype", "TUI")
+  vim.api.nvim_buf_set_option(M.buf, "filetype", "TUI")
 
-  for _,keymap in ipairs(opts.mappings) do
-    vim.api.nvim_buf_set_keymap(M.buf, "t", keymap[1], keymap[2], {silent = true})
+  for _, keymap in ipairs(opts.mappings) do
+    vim.api.nvim_buf_set_keymap(M.buf, "t", keymap[1], keymap[2], { silent = true })
   end
 
   for _, func in ipairs(opts.on_open) do
     func()
   end
 
-  vim.fn.termopen(opts.cmd, {on_exit = on_exit})
-  vim.cmd("startinsert")
+  vim.fn.termopen(opts.cmd, { on_exit = on_exit })
 
-  vim.cmd("autocmd! VimResized * lua require('tui-nvim').VimResized()")
+  vim.cmd("startinsert")
+  vim.cmd([[augroup TuiNvim
+    autocmd! VimResized * lua require('tui-nvim').VimResized()
+  augroup END]])
 end
 
 return M
